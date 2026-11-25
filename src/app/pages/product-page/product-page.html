@@ -1,0 +1,30 @@
+<div class="admin-layout">
+    <app-sidebar-component></app-sidebar-component>
+    <main class="admin-main">
+        <header class="page-heading">
+            <div><p class="eyebrow">BIBLIOTECA COMPARTIDA</p><h1>Catálogo</h1><p class="page-description">Mantén organizados los productos que colecciona la comunidad.</p></div>
+            <button type="button" class="primary-action" (click)="openProductModal()"><span aria-hidden="true">＋</span> Añadir producto</button>
+        </header>
+        <section class="table-panel" aria-label="Productos del catálogo">
+            <div class="table-toolbar"><p><strong>{{ filteredProducts().length }}</strong> productos</p><label class="search-box"><span aria-hidden="true">⌕</span><input type="search" placeholder="Buscar título, código o categoría" aria-label="Buscar productos" (input)="onSearch($event)"></label></div>
+            <div class="table-scroll"><table class="data-table">
+                <thead><tr><th>Código de barras</th><th>Título</th><th>Plataforma</th><th>Categoría</th><th class="text-end">Acciones</th></tr></thead>
+                <tbody>
+                    @for (p of filteredProducts(); track p.id) {
+                    <tr><td>{{ p.barcode }}</td><td>{{ p.title }}</td><td>{{ p.platform || '—' }}</td><td>{{ p.category }}</td><td><div class="table-actions"><button type="button" class="table-action" (click)="openProductModal(p)">Editar</button><button type="button" class="table-action danger" (click)="openDeleteModal(p)">Eliminar</button></div></td></tr>
+                    } @empty { <tr><td colspan="5" class="empty-row">{{ search() ? 'No hay productos que coincidan con la búsqueda.' : 'Todavía no hay productos en el catálogo.' }}</td></tr> }
+                </tbody>
+            </table></div>
+        </section>
+    </main>
+    @if (productFormOpen()) {
+    <div class="modal show d-block" role="dialog" aria-modal="true" aria-label="Formulario de producto" (click)="closeProductModal()">
+        <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()"><app-product-modal [product]="editingProduct()" (saved)="saveProduct($event)" (dismissed)="closeProductModal()"></app-product-modal></div>
+    </div>
+    }
+    @if (productToDelete(); as product) {
+    <div class="modal show d-block" role="dialog" aria-modal="true" aria-label="Confirmar eliminación" (click)="resolveDelete(false)">
+        <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()"><app-confirm-delete-modal [name]="product.title" (answer)="resolveDelete($event)"></app-confirm-delete-modal></div>
+    </div>
+    }
+</div>

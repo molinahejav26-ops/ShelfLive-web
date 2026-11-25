@@ -1,0 +1,30 @@
+<div class="admin-layout">
+    <app-sidebar-component></app-sidebar-component>
+    <main class="admin-main">
+        <header class="page-heading">
+            <div><p class="eyebrow">TU COMUNIDAD</p><h1>Usuarios</h1><p class="page-description">Administra miembros y permisos de ShelfLife.</p></div>
+            <button type="button" class="primary-action" (click)="openUserModal()"><span aria-hidden="true">＋</span> Añadir usuario</button>
+        </header>
+        <section class="table-panel" aria-label="Usuarios de ShelfLife">
+            <div class="table-toolbar"><p><strong>{{ filteredUsers().length }}</strong> usuarios</p><label class="search-box"><span aria-hidden="true">⌕</span><input type="search" placeholder="Buscar por nombre, correo o rol" aria-label="Buscar usuarios" (input)="onSearch($event)"></label></div>
+            <div class="table-scroll"><table class="data-table">
+                <thead><tr><th>Miembro</th><th>Correo electrónico</th><th>Rol</th><th class="text-end">Acciones</th></tr></thead>
+                <tbody>
+                    @for (u of filteredUsers(); track u.id) {
+                    <tr><td>{{ u.name }}</td><td>{{ u.email }}</td><td><span class="role-pill" [class.admin]="u.role === 'admin'">{{ u.role === 'admin' ? 'Administradora' : 'Miembro' }}</span></td><td><div class="table-actions"><button type="button" class="table-action" (click)="openUserModal(u)">Editar</button><button type="button" class="table-action danger" (click)="openDeleteModal(u)">Eliminar</button></div></td></tr>
+                    } @empty { <tr><td colspan="4" class="empty-row">{{ search() ? 'No hay usuarios que coincidan con la búsqueda.' : 'Todavía no hay usuarios.' }}</td></tr> }
+                </tbody>
+            </table></div>
+        </section>
+    </main>
+    @if (userFormOpen()) {
+    <div class="modal show d-block" role="dialog" aria-modal="true" aria-label="Formulario de usuario" (click)="closeUserModal()">
+        <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()"><app-user-modal [user]="editingUser()" (saved)="saveUser($event)" (dismissed)="closeUserModal()"></app-user-modal></div>
+    </div>
+    }
+    @if (userToDelete(); as user) {
+    <div class="modal show d-block" role="dialog" aria-modal="true" aria-label="Confirmar eliminación" (click)="resolveDelete(false)">
+        <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()"><app-confirm-delete-modal [name]="user.name" (answer)="resolveDelete($event)"></app-confirm-delete-modal></div>
+    </div>
+    }
+</div>

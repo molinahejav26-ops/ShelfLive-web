@@ -1,0 +1,51 @@
+<form class="modal-content" [formGroup]="productForm" (ngSubmit)="save()" novalidate>
+    <div class="modal-header">
+        <h4 class="modal-title">{{ editing ? 'Editar producto' : 'Añadir producto' }}</h4>
+        <button type="button" class="btn-close" aria-label="Cerrar" (click)="dismissed.emit()">×</button>
+    </div>
+
+    <div class="modal-body">
+        <div class="mb-3">
+            <label for="barcode" class="form-label">Código de barras</label>
+            <input id="barcode" type="text" formControlName="barcode" class="form-control"
+                [class.is-invalid]="isInvalidField('barcode')" />
+            @if(isInvalidField('barcode')) {
+            <div class="invalid-feedback">
+                @if(productForm.get('barcode')?.hasError('required')) { El código de barras es obligatorio }
+                @if(productForm.get('barcode')?.hasError('pattern')) { Debe tener entre 8 y 14 números }
+            </div>
+            }
+        </div>
+
+        <div class="mb-3">
+            <label for="title" class="form-label">Título</label>
+            <input id="title" type="text" formControlName="title" class="form-control"
+                [class.is-invalid]="isInvalidField('title')" />
+            @if(isInvalidField('title')) {
+            <div class="invalid-feedback">
+                @if(productForm.get('title')?.hasError('required')) { El título es obligatorio }
+                @if(productForm.get('title')?.hasError('minlength')) { Mínimo 2 caracteres }
+            </div>
+            }
+        </div>
+
+        <div class="mb-3">
+            <label for="platform" class="form-label">Plataforma</label>
+            <input id="platform" type="text" formControlName="platform" class="form-control" />
+        </div>
+
+        <div>
+            <label for="category" class="form-label">Categoría</label>
+            <select id="category" formControlName="category" class="form-select">
+                <option value="Videojuegos">Videojuegos</option>
+                <option value="Libros">Libros</option>
+                <option value="Cómics">Cómics</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="dismissed.emit()">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar producto</button>
+    </div>
+</form>

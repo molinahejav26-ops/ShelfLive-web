@@ -1,0 +1,30 @@
+<div class="admin-layout">
+    <app-sidebar-component></app-sidebar-component>
+    <main class="admin-main">
+        <header class="page-heading">
+            <div><p class="eyebrow">COLECCIONES PERSONALES</p><h1>Ítems</h1><p class="page-description">Consulta y modera los objetos registrados por los miembros.</p></div>
+            <button type="button" class="primary-action" (click)="openItemModal()"><span aria-hidden="true">＋</span> Añadir ítem</button>
+        </header>
+        <section class="table-panel" aria-label="Ítems de los usuarios">
+            <div class="table-toolbar"><p><strong>{{ filteredItems().length }}</strong> ítems</p><label class="search-box"><span aria-hidden="true">⌕</span><input type="search" placeholder="Buscar producto, miembro o estado" aria-label="Buscar ítems" (input)="onSearch($event)"></label></div>
+            <div class="table-scroll"><table class="data-table">
+                <thead><tr><th>Producto</th><th>Miembro</th><th>Estado</th><th>Precio pagado</th><th class="text-end">Acciones</th></tr></thead>
+                <tbody>
+                    @for (i of filteredItems(); track i.id) {
+                    <tr><td>{{ i.product }}</td><td>{{ i.user }}</td><td><span class="state-pill" [class.used]="i.state !== 'new'">{{ i.state === 'new' ? 'Nuevo' : 'Usado' }}</span></td><td>{{ i.price | currency:'EUR':'symbol':'1.2-2' }}</td><td><div class="table-actions"><button type="button" class="table-action" (click)="openItemModal(i)">Editar</button><button type="button" class="table-action danger" (click)="openDeleteModal(i)">Eliminar</button></div></td></tr>
+                    } @empty { <tr><td colspan="5" class="empty-row">{{ search() ? 'No hay ítems que coincidan con la búsqueda.' : 'Todavía no hay ítems registrados.' }}</td></tr> }
+                </tbody>
+            </table></div>
+        </section>
+    </main>
+    @if (itemFormOpen()) {
+    <div class="modal show d-block" role="dialog" aria-modal="true" aria-label="Formulario de ítem" (click)="closeItemModal()">
+        <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()"><app-item-modal [item]="editingItem()" (saved)="saveItem($event)" (dismissed)="closeItemModal()"></app-item-modal></div>
+    </div>
+    }
+    @if (itemToDelete(); as item) {
+    <div class="modal show d-block" role="dialog" aria-modal="true" aria-label="Confirmar eliminación" (click)="resolveDelete(false)">
+        <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()"><app-confirm-delete-modal [name]="item.product" (answer)="resolveDelete($event)"></app-confirm-delete-modal></div>
+    </div>
+    }
+</div>

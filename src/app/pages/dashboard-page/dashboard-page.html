@@ -1,0 +1,70 @@
+<div class="admin-layout">
+    <app-sidebar-component></app-sidebar-component>
+    <main class="admin-main dashboard-page">
+        <header class="page-heading">
+            <div>
+                <p class="eyebrow">MARTES, 25 DE NOVIEMBRE</p>
+                <h1>Tu comunidad, en movimiento.</h1>
+                <p class="page-description">Resumen de actividad y estado de ShelfLife.</p>
+            </div>
+            <a class="primary-action" routerLink="/products"><span aria-hidden="true">＋</span> Añadir producto</a>
+        </header>
+
+        <section class="metric-grid" aria-label="Indicadores principales">
+            <article class="metric-card metric-users">
+                <div class="metric-top"><span class="metric-icon" aria-hidden="true">◎</span><span class="metric-change">↗ 12,8%</span></div>
+                <p>Miembros de la comunidad</p><strong>{{ totalUsers }}</strong><small>frente al mes pasado</small>
+            </article>
+            <article class="metric-card metric-items">
+                <div class="metric-top"><span class="metric-icon" aria-hidden="true">▤</span><span class="metric-change">↗ 8,4%</span></div>
+                <p>Objetos catalogados</p><strong>{{ totalItems }}</strong><small>en todas las colecciones</small>
+            </article>
+            <article class="metric-card metric-activity">
+                <div class="metric-top"><span class="metric-icon" aria-hidden="true">⌁</span><span class="metric-change">↗ 4,2%</span></div>
+                <p>Acciones hoy</p><strong>{{ activityToday }}</strong><small>escaneos y actualizaciones</small>
+            </article>
+        </section>
+
+        <section class="dashboard-grid">
+            <article class="panel activity-panel">
+                <div class="panel-heading"><div><p class="eyebrow">ÚLTIMOS 7 DÍAS</p><h2>Ritmo de la comunidad</h2></div><span class="panel-note">Actividad diaria</span></div>
+                <div class="activity-chart" role="img" aria-label="Actividad semanal: lunes 46, martes 68, miércoles 55, jueves 82, viernes 62, sábado 94 y domingo 73 por ciento">
+                    @for (column of weeklyActivity; track column.day) {
+                    <div class="chart-column"><div class="chart-track"><span [style.height.%]="column.height" [class.chart-highlight]="column.day === 'Sáb'"></span></div><span>{{ column.day }}</span></div>
+                    }
+                </div>
+                <div class="chart-footer"><span><i></i> Interacciones</span><strong>+18,6% <small>esta semana</small></strong></div>
+            </article>
+
+            <article class="panel system-panel">
+                <div class="panel-heading"><div><p class="eyebrow">ESTADO DEL SERVICIO</p><h2>Todo en orden</h2></div><span class="status-pulse" aria-label="Operativo"></span></div>
+                <div class="system-row"><span>API ShelfLife</span><strong><i></i> Operativa</strong></div>
+                <div class="system-row"><span>Catálogo</span><strong><i></i> Sincronizado</strong></div>
+                <div class="system-row"><span>Última copia</span><strong>Hoy, 09:42</strong></div>
+                <a class="text-link" routerLink="/items">Revisar el catálogo <span aria-hidden="true">→</span></a>
+            </article>
+
+            <article class="panel recent-panel">
+                <div class="panel-heading"><div><p class="eyebrow">EN TIEMPO REAL</p><h2>Actividad reciente</h2></div><a class="text-link" routerLink="/users">Ver usuarios <span aria-hidden="true">→</span></a></div>
+                <div class="activity-list">
+                    @for (entry of recentActivity; track entry.initials) {
+                    <div class="activity-entry">
+                        <span class="avatar" [class]="'avatar avatar-' + entry.tone">{{ entry.initials }}</span>
+                        <div class="activity-copy"><p><strong>{{ entry.name }}</strong> {{ entry.action }}</p><small>{{ entry.detail }}</small></div>
+                        <time>{{ entry.time }}</time>
+                    </div>
+                    }
+                </div>
+            </article>
+
+            <article class="quick-panel">
+                <p class="eyebrow">ACCESOS RÁPIDOS</p><h2>¿Qué necesitas hacer?</h2>
+                <div class="quick-links">
+                    <a routerLink="/products"><span class="quick-icon quick-coral" aria-hidden="true">＋</span><span><strong>Nuevo producto</strong><small>Ampliar el catálogo</small></span><b aria-hidden="true">→</b></a>
+                    <a routerLink="/users"><span class="quick-icon quick-blue" aria-hidden="true">◎</span><span><strong>Gestionar usuarios</strong><small>Revisar la comunidad</small></span><b aria-hidden="true">→</b></a>
+                    <a routerLink="/items"><span class="quick-icon quick-mint" aria-hidden="true">▤</span><span><strong>Explorar ítems</strong><small>Ver colecciones</small></span><b aria-hidden="true">→</b></a>
+                </div>
+            </article>
+        </section>
+    </main>
+</div>
