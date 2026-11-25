@@ -1,0 +1,31 @@
+<main class="auth">
+    <section class="hero">
+        <div class="marca">
+            <span class="logo">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="m9 9 6 6M15 9l-6 6" />
+                </svg>
+            </span>
+            <span class="marca-nombre">ShelfLife</span>
+        </div>
+
+        <div class="hero-texto">
+            @if (etiqueta()) {
+            <span class="etiqueta">{{ etiqueta() }}</span>
+            }
+            <h2>{{ titulo() }}</h2>
+            <p>{{ texto() }}</p>
+            <div class="cifras">
+                <div><strong>24,8k</strong><span>COLECCIONISTAS</span></div>
+                <div><strong>1,2M</strong><span>OBJETOS INDEXADOS</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-contenido">
+            <ng-content></ng-content>
+        </div>
+    </section>
+</main>

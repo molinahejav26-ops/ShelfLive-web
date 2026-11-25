@@ -1,0 +1,45 @@
+<form [formGroup]="userForm" (ngSubmit)="save()" novalidate>
+    <div class="modal-header">
+        <h4 class="modal-title">{{ editing ? 'Editar usuario' : 'Añadir usuario' }}</h4>
+        <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+    </div>
+
+    <div class="modal-body">
+        <div class="mb-3">
+            <label for="name" class="form-label">Nombre</label>
+            <input id="name" type="text" formControlName="name" class="form-control"
+                [class.is-invalid]="isInvalidField('name')" />
+            @if(isInvalidField('name')) {
+            <div class="invalid-feedback">
+                @if(userForm.get('name')?.hasError('required')) { El nombre es obligatorio }
+                @if(userForm.get('name')?.hasError('minlength')) { Mínimo 2 caracteres }
+            </div>
+            }
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Correo electrónico</label>
+            <input id="email" type="email" formControlName="email" class="form-control"
+                [class.is-invalid]="isInvalidField('email')" />
+            @if(isInvalidField('email')) {
+            <div class="invalid-feedback">
+                @if(userForm.get('email')?.hasError('required')) { El correo es obligatorio }
+                @if(userForm.get('email')?.hasError('email')) { Formato de correo no válido }
+            </div>
+            }
+        </div>
+
+        <div>
+            <label for="role" class="form-label">Rol</label>
+            <select id="role" formControlName="role" class="form-select">
+                <option value="Usuario">Usuario</option>
+                <option value="Administrador">Administrador</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="activeModal.dismiss()">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+</form>

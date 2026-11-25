@@ -1,0 +1,135 @@
+<app-auth-layout-component etiqueta="DESCUBRE · ORGANIZA · COMPARTE" titulo="Tu colección empieza aquí."
+    texto="Reúne tus libros, cómics y videojuegos en un solo lugar. Dale una nueva vida a tu estantería.">
+
+    <div class="icono-escudo">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+        </svg>
+    </div>
+    <h1>Crea tu cuenta</h1>
+    <p class="subtitulo">Regístrate por primera vez y empieza a organizar tu colección.</p>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+        <div class="fila-2 campo">
+            <div>
+                <label for="nombre" class="form-label">Nombre</label>
+                <input id="nombre" type="text" formControlName="nombre" class="form-control" placeholder="Tu nombre"
+                    autocomplete="given-name" [class.is-invalid]="isInvalidField('nombre')" />
+                @if(isInvalidField('nombre')) {
+                <div class="invalid-feedback">
+                    @if(registerForm.get('nombre')?.hasError('required')) { El nombre es obligatorio }
+                    @if(registerForm.get('nombre')?.hasError('minlength')) { Mínimo 2 caracteres }
+                    @if(registerForm.get('nombre')?.hasError('maxlength')) { Máximo 30 caracteres }
+                    @if(registerForm.get('nombre')?.hasError('pattern')) { Solo se permiten letras }
+                </div>
+                }
+            </div>
+
+            <div>
+                <label for="apellidos" class="form-label">Apellidos</label>
+                <input id="apellidos" type="text" formControlName="apellidos" class="form-control"
+                    placeholder="Tus apellidos" autocomplete="family-name"
+                    [class.is-invalid]="isInvalidField('apellidos')" />
+                @if(isInvalidField('apellidos')) {
+                <div class="invalid-feedback">
+                    @if(registerForm.get('apellidos')?.hasError('required')) { Los apellidos son obligatorios }
+                    @if(registerForm.get('apellidos')?.hasError('minlength')) { Mínimo 2 caracteres }
+                    @if(registerForm.get('apellidos')?.hasError('maxlength')) { Máximo 50 caracteres }
+                    @if(registerForm.get('apellidos')?.hasError('pattern')) { Solo se permiten letras }
+                </div>
+                }
+            </div>
+        </div>
+
+        <div class="campo">
+            <label for="email" class="form-label">Correo electrónico</label>
+            <input id="email" type="email" formControlName="email" class="form-control" placeholder="tu@ejemplo.com"
+                autocomplete="email" [class.is-invalid]="isInvalidField('email')" />
+            @if(isInvalidField('email')) {
+            <div class="invalid-feedback">
+                @if(registerForm.get('email')?.hasError('required')) { El correo es obligatorio }
+                @if(registerForm.get('email')?.hasError('email')) { Formato de correo no válido }
+            </div>
+            }
+        </div>
+
+        <div class="campo">
+            <label for="password" class="form-label">Contraseña</label>
+            <div class="entrada con-icono con-ojo">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                <input id="password" [type]="verPassword() ? 'text' : 'password'" formControlName="password"
+                    class="form-control" placeholder="Crea una contraseña" autocomplete="new-password"
+                    [class.is-invalid]="isInvalidField('password')" />
+                <button type="button" class="ojo" (click)="togglePassword()"
+                    [attr.aria-label]="verPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0" />
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="m3 3 18 18" [class.oculto]="!verPassword()" />
+                    </svg>
+                </button>
+            </div>
+            @if(isInvalidField('password')) {
+            <div class="invalid-feedback">
+                @if(registerForm.get('password')?.hasError('required')) { La contraseña es obligatoria }
+                @if(registerForm.get('password')?.hasError('minlength')) { Mínimo 8 caracteres }
+                @if(registerForm.get('password')?.hasError('pattern')) { Debe incluir al menos una mayúscula y un número }
+            </div>
+            }
+        </div>
+
+        <div class="campo">
+            <label for="confirmarPassword" class="form-label">Confirmar contraseña</label>
+            <div class="entrada con-icono con-ojo">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                <input id="confirmarPassword" [type]="verConfirmacion() ? 'text' : 'password'"
+                    formControlName="confirmarPassword" class="form-control" placeholder="Repite tu contraseña"
+                    autocomplete="new-password"
+                    [class.is-invalid]="isInvalidField('confirmarPassword') || passwordsNoCoinciden()" />
+                <button type="button" class="ojo" (click)="toggleConfirmacion()"
+                    [attr.aria-label]="verConfirmacion() ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0" />
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="m3 3 18 18" [class.oculto]="!verConfirmacion()" />
+                    </svg>
+                </button>
+            </div>
+            @if(isInvalidField('confirmarPassword')) {
+            <div class="invalid-feedback">Confirma tu contraseña</div>
+            }
+            @if(passwordsNoCoinciden()) {
+            <div class="invalid-feedback">Las contraseñas no coinciden</div>
+            }
+        </div>
+
+        <p class="ayuda">Usa al menos 8 caracteres, una mayúscula y un número.</p>
+
+        <div class="campo">
+            <label class="check" for="terminos">
+                <input id="terminos" type="checkbox" formControlName="terminos" />
+                Acepto los términos de uso y la política de privacidad.
+            </label>
+            @if(isInvalidField('terminos')) {
+            <div class="invalid-feedback">Debes aceptar los términos y la política de privacidad</div>
+            }
+        </div>
+
+        <button type="submit" class="boton-principal">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                <path d="m10 17 5-5-5-5" />
+                <path d="M15 12H3" />
+            </svg>
+            Crear mi cuenta
+        </button>
+
+        <p class="pie">¿Ya tienes cuenta? <a routerLink="/login" class="enlace">Inicia sesión</a></p>
+    </form>
+</app-auth-layout-component>
